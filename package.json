@@ -1,0 +1,27 @@
+{
+  "name": "afucontest",
+  "version": "1.0.0",
+  "description": "",
+  "main": ".dev/test.js",
+  "scripts": {
+    "test": "jest --coverage",
+    "migrate": "node scripts/migrate.js",
+    "rollback": "node scripts/rollback.js",
+    "seed": "node scripts/seed.js"
+  },
+  "private": true,
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "iconv-lite": "^0.6.3",
+    "jschardet": "^3.1.3",
+    "knex": "^3.1.0",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.10.3"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  }
+}

@@ -1,0 +1,6 @@
+coverage
+.dev
+.idea
+uploads/logs/*.CBR
+.env
+node_modules
