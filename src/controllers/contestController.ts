@@ -1,9 +1,8 @@
-const {getDb} = require('../controllers/databaseController');
+import { getDb } from '../controllers/databaseController';
 
 class ContestController {
-    async getByID(contestID) {
+    async getByID(contestID: number): Promise<any> {
         const db = getDb();
-
         try {
             return await db('contests').where({id: contestID}).first();
         } catch (error) {
@@ -11,9 +10,9 @@ class ContestController {
             throw error;
         }
     }
-    async getByName(contestName) {
-        const db = getDb();
 
+    async getByName(contestName: string): Promise<any> {
+        const db = getDb();
         try {
             return await db('contests').whereRaw('LOWER(name) = ?', [contestName.toLowerCase()]).first();
         } catch (error) {
@@ -23,4 +22,4 @@ class ContestController {
     }
 }
 
-module.exports = new ContestController();
+export default new ContestController();

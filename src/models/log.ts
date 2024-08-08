@@ -1,5 +1,9 @@
 class Log {
+    header: { version: string; category: string; grid: { locator: string}, claimed: { score: string }, address: string[], soapbox:string[], contest: string, callsign: string, location: string, created: {by: string}, name: string, operators: string[]} ;
+    qsos: any[];
+
     constructor() {
+        // TODO: Contest should be reference to contest.id
         this.header = {
             version: '',
             category: '',
@@ -23,5 +27,4 @@ class Log {
         this.qsos = [];
     }
 }
-
-module.exports = Log;
+export default Log;

@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('../src/index');
+const app = require('../src');
 
 describe('GET /api/user', () => {
     it('should return user details', async () => {
