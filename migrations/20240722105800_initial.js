@@ -2,21 +2,21 @@
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.up = function(knex) {
+exports.up = function (knex) {
     return knex.schema
-        .createTable('contest.contests', function (table) {
+        .createTable('contests', function (table) {
             table.increments('id').unsigned().primary();
             table.timestamp('created_at').defaultTo(knex.fn.now());
-            table.timestamp('updated_at').defaultTo(knex.raw('NULL ON UPDATE CURRENT_TIMESTAMP'));
+            table.timestamp('updated_at').nullable();
             table.string('name', 25);
             table.enu('open', ['0', '1']).defaultTo('1');
         })
         .then(function () {
-            return knex.schema.createTable('contest.categories', function (table) {
+            return knex.schema.createTable('categories', function (table) {
                 table.increments('id').unsigned().primary();
                 table.timestamp('created_at').defaultTo(knex.fn.now());
-                table.timestamp('updated_at').defaultTo(knex.raw('NULL ON UPDATE CURRENT_TIMESTAMP'));
-                table.integer('contest_id').unsigned().references('id').inTable('contest.contests');
+                table.timestamp('updated_at').nullable();
+                table.integer('contest_id').unsigned().references('id').inTable('contests');
                 table.string('operator', 25);
                 table.string('assisted', 25);
                 table.string('band', 15);
@@ -28,12 +28,12 @@ exports.up = function(knex) {
             });
         })
         .then(function () {
-            return knex.schema.createTable('contest.logs', function (table) {
+            return knex.schema.createTable('logs', function (table) {
                 table.increments('id').unsigned().primary();
                 table.timestamp('created_at').defaultTo(knex.fn.now());
-                table.timestamp('updated_at').defaultTo(knex.raw('NULL ON UPDATE CURRENT_TIMESTAMP'));
+                table.timestamp('updated_at').nullable();
                 table.string('version', 10);
-                table.integer('category_id').unsigned().references('id').inTable('contest.categories');
+                table.integer('category_id').unsigned().references('id').inTable('categories');
                 table.string('grid_locator', 8);
                 table.integer('claimed_score');
                 table.text('address');
@@ -48,10 +48,10 @@ exports.up = function(knex) {
             });
         })
         .then(function () {
-            return knex.schema.createTable('contest.operators', function (table) {
+            return knex.schema.createTable('operators', function (table) {
                 table.increments('id').unsigned().primary();
                 table.timestamp('created_at').defaultTo(knex.fn.now());
-                table.timestamp('updated_at').defaultTo(knex.raw('NULL ON UPDATE CURRENT_TIMESTAMP'));
+                table.timestamp('updated_at').nullable();
                 table.string('callsign', 13).unique();
                 table.string('license', 2);
                 table.text('owner');
@@ -59,11 +59,11 @@ exports.up = function(knex) {
             });
         })
         .then(function () {
-            return knex.schema.createTable('contest.qsos', function (table) {
+            return knex.schema.createTable('qsos', function (table) {
                 table.increments('id').unsigned().primary();
                 table.timestamp('created_at').defaultTo(knex.fn.now());
-                table.timestamp('updated_at').defaultTo(knex.raw('NULL ON UPDATE CURRENT_TIMESTAMP'));
-                table.integer('log_id').unsigned().references('id').inTable('contest.logs');
+                table.timestamp('updated_at').nullable();
+                table.integer('log_id').unsigned().references('id').inTable('logs');
                 table.string('freq', 5);
                 table.string('mode', 2);
                 table.string('date', 10);
@@ -79,6 +79,66 @@ exports.up = function(knex) {
                 table.string('rx_ov', 25);
                 table.string('rx_locator', 10);
             });
+        })
+        .then(function () {
+            return knex.raw(`
+            CREATE TRIGGER update_contests_updated_at
+            AFTER UPDATE ON contests
+            FOR EACH ROW
+            BEGIN
+                UPDATE contests
+                SET updated_at = CURRENT_TIMESTAMP
+                WHERE id = OLD.id;
+            END
+        `);
+        })
+        .then(function () {
+            return knex.raw(`
+            CREATE TRIGGER update_qsos_updated_at
+            AFTER UPDATE ON qsos
+            FOR EACH ROW
+            BEGIN
+                UPDATE qsos
+                SET updated_at = CURRENT_TIMESTAMP
+                WHERE id = OLD.id;
+            END
+        `);
+        })
+        .then(function () {
+            return knex.raw(`
+            CREATE TRIGGER update_categories_updated_at
+            AFTER UPDATE ON categories
+            FOR EACH ROW
+            BEGIN
+                UPDATE categories
+                SET updated_at = CURRENT_TIMESTAMP
+                WHERE id = OLD.id;
+            END
+        `);
+        })
+        .then(function () {
+            return knex.raw(`
+            CREATE TRIGGER update_logs_updated_at
+            AFTER UPDATE ON logs
+            FOR EACH ROW
+            BEGIN
+                UPDATE logs
+                SET updated_at = CURRENT_TIMESTAMP
+                WHERE id = OLD.id;
+            END
+        `);
+        })
+        .then(function () {
+            return knex.raw(`
+            CREATE TRIGGER update_operators_updated_at
+            AFTER UPDATE ON operators
+            FOR EACH ROW
+            BEGIN
+                UPDATE operators
+                SET updated_at = CURRENT_TIMESTAMP
+                WHERE id = OLD.id;
+            END
+        `);
         });
 };
 
@@ -86,19 +146,19 @@ exports.up = function(knex) {
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.down = function(knex) {
+exports.down = function (knex) {
     return knex.schema
-        .dropTable('contest.qsos')
+        .dropTable('qsos')
         .then(function () {
-            return knex.schema.dropTable('contest.operators');
+            return knex.schema.dropTable('operators');
         })
         .then(function () {
-            return knex.schema.dropTable('contest.logs');
+            return knex.schema.dropTable('logs');
         })
         .then(function () {
-            return knex.schema.dropTable('contest.categories');
+            return knex.schema.dropTable('categories');
         })
         .then(function () {
-            return knex.schema.dropTable('contest.contests');
+            return knex.schema.dropTable('contests');
         });
 };
