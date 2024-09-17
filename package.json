@@ -1,5 +1,5 @@
 {
-  "name": "afucontest",
+  "name": "contest_result_analyzer",
   "version": "1.0.0",
   "description": "",
   "main": ".dev/test.js",
