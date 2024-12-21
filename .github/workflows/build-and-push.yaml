@@ -28,7 +28,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=match,pattern=^refs/heads/(main|feature/dockerize)$,name=dev,enable=true
+            type=raw,value=dev,enable=${{ startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/feature/dockerize')}}
             type=ref,event=tag,enable=true,name=latest
             type=ref,event=tag,enable=true
           
