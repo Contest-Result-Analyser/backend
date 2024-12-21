@@ -6,6 +6,10 @@ on:
       - 'feature/dockerize' # temporary
     tags:
       - 'v*'
+    
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   docker-build-and-push:
@@ -22,9 +26,9 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: Contest-Result-Analyser/backend
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=ref,event=branch,pattern=^(main|feature/dockerize)$,enable=true,name=dev
+            type=match,pattern=^refs/heads/(main|feature/dockerize)$,name=dev,enable=true
             type=ref,event=tag,enable=true,name=latest
             type=ref,event=tag,enable=true
           
@@ -36,7 +40,7 @@ jobs:
       - name: docker login
         uses: docker/login-action@v3
         with:
-          registry: ghcr.io
+          registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
