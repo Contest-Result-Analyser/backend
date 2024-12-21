@@ -1,0 +1,32 @@
+services:
+  mariadb:
+    image: mariadb:11
+    restart: always
+    volumes:
+      - "mariadb-storage:/var/lib/mysql"
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_USER: ${DB_USER}
+      MARIADB_DATABASE: ${DB_NAME}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+
+  contestanalyzer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    environment:
+      DB_CLIENT: mysql2
+      DB_HOST: mariadb
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+    
+    restart: always
+    depends_on:
+      - mariadb
+    ports:
+      - 3000:3000
+
+volumes:
+  mariadb-storage:

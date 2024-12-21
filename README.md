@@ -13,6 +13,7 @@ For more information on Cabrillo, please visit [www.cqwpx.com/cabrillo.htm](http
 ## Environment file (.env)
 
 ```
+DB_CLIENT=mysql2
 DB_HOST=localhost
 DB_USER=my_contest_user
 DB_PASSWORD=my_contest_pass
