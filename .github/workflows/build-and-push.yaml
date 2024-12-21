@@ -24,7 +24,7 @@ jobs:
         with:
           images: Contest-Result-Analyser/backend
           tags: |
-            type=ref,event=branch=^(main|feature/dockerize)$,enable=true,name=dev
+            type=ref,event=branch,pattern=^(main|feature/dockerize)$,enable=true,name=dev
             type=ref,event=tag,enable=true,name=latest
             type=ref,event=tag,enable=true
           
