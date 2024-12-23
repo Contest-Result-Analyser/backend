@@ -11,9 +11,7 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
   DEPLOY_URL: https://he2.srv.awuerfel.de/deploy
-  IS_DEV: ${{ startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/feature/dockerize')}}
   
-
 jobs:
   docker-build-and-push:
     runs-on: self-hosted
@@ -31,7 +29,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=dev,enable=${{ vars.IS_DEV }}
+            type=raw,value=dev,enable=${{ startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/feature/dockerize')}}
             type=ref,event=tag,enable=true
           
           labels: |
@@ -63,7 +61,7 @@ jobs:
         env:
           DEPLOY_TOKEN_DEV: ${{ secrets.DEPLOY_TOKEN_DEV }}
           DEPLOY_TOKEN_PROD: ${{ secrets.DEPLOY_TOKEN_PROD }}
-          IS_DEV: ${{ vars.IS_DEV }}
+          IS_DEV: ${{ startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/feature/dockerize')}}
         run: |
           DEPLOY_TOKEN=$([ "$IS_DEV" == "true" ] && echo "$DEPLOY_TOKEN_DEV" || echo "$DEPLOY_TOKEN_PROD")
           curl -sSN -H "Authorization: Bearer $DEPLOY_TOKEN" -X POST "${{ vars.DEPLOY_URL }}" | tee output.txt
