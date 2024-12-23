@@ -64,7 +64,7 @@ jobs:
           IS_DEV: ${{ startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/feature/dockerize')}}
         run: |
           DEPLOY_TOKEN=$([ "$IS_DEV" == "true" ] && echo "$DEPLOY_TOKEN_DEV" || echo "$DEPLOY_TOKEN_PROD")
-          curl -sSN -H "Authorization: Bearer $DEPLOY_TOKEN" -X POST "${{ vars.DEPLOY_URL }}" | tee output.txt
+          curl -sSN -H "Authorization: Bearer $DEPLOY_TOKEN" -X POST "$DEPLOY_URL" | tee output.txt
 
           # Check the output file for the string "FAILURE"
           if grep -q "FAILURE" output.txt; then
