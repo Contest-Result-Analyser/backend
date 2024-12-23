@@ -31,7 +31,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=dev,enable=${{ vars.IS_DEV )}}
+            type=raw,value=dev,enable=${{ vars.IS_DEV }}
             type=ref,event=tag,enable=true
           
           labels: |
