@@ -28,3 +28,7 @@ DB_NAME=contest
 4. Place the Cabrillo logs in the `uploads/logs` folder.
 5. After starting, call up the following URL in your browser: `http://127.0.0.1:3000/api/cabrillo/parse?filename=my_log.CBR`
 6. Now the log will be read and the found ham operators (Germany) will be directly retrieved and stored in the database.
+
+## Auto deployment
+Push to main deploys to https://dev.frankencontest.de/api
+Push a semver tag deploys to https://frankencontest.de/api
