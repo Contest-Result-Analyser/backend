@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - 'main'
-      - 'feature/dockerize' # temporary
     tags:
       - 'v*'
     
@@ -29,7 +28,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=dev,enable=${{ startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/feature/dockerize')}}
+            type=raw,value=dev,enable=${{ startsWith(github.ref, 'refs/heads/main') }}
             type=ref,event=tag,enable=true
           
           labels: |
@@ -61,7 +60,7 @@ jobs:
         env:
           DEPLOY_TOKEN_DEV: ${{ secrets.DEPLOY_TOKEN_DEV }}
           DEPLOY_TOKEN_PROD: ${{ secrets.DEPLOY_TOKEN_PROD }}
-          IS_DEV: ${{ startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/feature/dockerize')}}
+          IS_DEV: ${{ startsWith(github.ref, 'refs/heads/main') }}
         run: |
           DEPLOY_TOKEN=$([ "$IS_DEV" == "true" ] && echo "$DEPLOY_TOKEN_DEV" || echo "$DEPLOY_TOKEN_PROD")
           curl -sSN -H "Authorization: Bearer $DEPLOY_TOKEN" -X POST "$DEPLOY_URL" | tee output.txt
