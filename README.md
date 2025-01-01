@@ -30,5 +30,5 @@ DB_NAME=contest
 6. Now the log will be read and the found ham operators (Germany) will be directly retrieved and stored in the database.
 
 ## Auto deployment
-Push to main deploys to https://dev.frankencontest.de/api
-Push a semver tag deploys to https://frankencontest.de/api
+- Push to main deploys to https://dev.frankencontest.de/api
+- Push a semver tag deploys to https://frankencontest.de/api
